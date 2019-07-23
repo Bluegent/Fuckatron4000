@@ -30,7 +30,7 @@ function parseText() {
     }
     delete rawdata;
     delete fs;
-    setInterval(parseText,5000);
+    setInterval(parseText,30000);
     
 }
 

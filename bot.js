@@ -2,18 +2,20 @@ var Commands = require('./commands.js');
 var auth = require('./auth.json');
 var Discord = require('discord.js');
 var textLoader = require('./textLoader.js');
+var utils = require('./utils.js');
 
 // Initialize Discord Bot
 var bot = new Discord.Client();
 bot.login(auth.token);
 
 bot.on("ready", () => {
+    textLoader.start();
     console.log("I am ready!");
     
     var channel = bot.channels.find(channel => channel.name == "bot-test");
-    var woke = bot.emojis.find(emoji => emoji.name === "woke");
-    channel.send(woke.toString() + " I have awakened. " + woke.toString());
-    textLoader.start();
+    var woke = utils.getEmoji(bot,"woke");
+    channel.send(woke.toString() + utils.getRandomValue(textLoader.getJSON().flavorText.awaken)+ woke.toString());
+    
 });
 
 bot.on("message", (message) => {
@@ -51,6 +53,16 @@ bot.on("message", (message) => {
             case 'choose':
                 {
                     Commands.chooseCommand(message,args);
+                }
+                break;
+            case 'ping':
+                {
+                    Commands.pingCommand(message,args);
+                }
+                break;
+            default:
+                {
+                    Commands.wrongCommand(message);
                 }
                 break;
         }

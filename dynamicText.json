@@ -15,21 +15,36 @@
         "What's good, homie?",
         "Aye?",
         "Idi nahui.",
-        "Nem tudom."
+        "Nem tudom.",
+        "Ayy lmao.",
+        "https://i.imgur.com/zZWw6Po.jpg",
+        "```<offensive shit>```",
+        "I'm not a bot, you're a bot."
     ],
-    "commands":["!dice", "!status", "!commands", "!server", "!purpose","!choose"],
+    "commands":["!dice", "!status", "!commands", "!server", "!purpose","!choose","!ping"],
     "descriptions":[
         "Returns a random number between 0 and the number given. If a second number is given, rolls the dice that many times(max 20). Usage: `!dice <number> <rolls>`",
         "Tells you if a minecraft server is online. Usage: `!status <server address>`",
         "Prints a list of commands. Usage: `!commands`",
         "Prints the status of my minecraft server. Usage `!server` or `!server help`" ,
-        "Picks one of a list of strings. Usage: `!choose <option1> <option2> <option3>...`"
+        "Picks one of a list of strings. Usage: `!choose <option1> <option2> <option3>...`",
+        "Pings a server and returns response time. Usage: `!ping <address>"
     ],
     "miscTextBits":{
-        "purpose":"https://i.imgur.com/SlnddRd.png"
+        "purpose":["https://i.imgur.com/SlnddRd.png","https://i.imgur.com/DbOCFlh.png"]
     },
-    "commandsFlavorText":{
-        "commandFailed":"Something went wrong...",
-        "commandOffline":"Server is offline."
-    }
+    "flavorText":{
+        "serverStatusFailed":"Dis command's fucked, yo.",
+        "serverStatusOffline":"Dat nigga dead.",
+        "awaken":["I have awakened.", "https://i.imgur.com/kBb54Y7.jpg","Real shit.","Battelcruiser operational.","I need your clothes, your boots and your bike."],
+        "lowRolls":"Number of rolls has to be >= your IQ(1) and <= 20.",
+        "lowDice":"Max number has to be equal >= your IQ(1). ",
+        "nanDice":"Bruh, that ain't a number. ",
+        "toobigDice":"Kyaa, onii-chan, that's too big! ", 
+        "serverStatusWait":"Hang on...",
+        "wrongCommand":"Bruh, read `!commands`...",
+        "pingResponse":"Response: ",
+        "pingCommand":"ping -c 4 "
+    },
+    "myServer":"dochia.go.ro:25565"
 }

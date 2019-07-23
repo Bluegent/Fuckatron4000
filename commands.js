@@ -11,12 +11,12 @@ exports.commandsCommand = function (message) {
 }
 
 
-function getFlavorText(client,number) {
+function getFlavorText(client, number) {
     var result = "";
-    
+
     if (number == 23)
-        result = " cm gros " + utils.getEmoji(client,"evilmastermind").toString().toString();
-        
+        result = " cm gros " + utils.getEmoji(client, "evilmastermind").toString().toString();
+
     if (number == 69)
         result = " (nice)";
 
@@ -28,23 +28,23 @@ function getFlavorText(client,number) {
 
 exports.diceCommand = function (message, args, client) {
     if (args[0] == undefined) {
-        message.channel.send(descriptions[0]);
+        message.channel.send(textLoader.getJSON().descriptions[0]);
         return;
     }
     var max = parseInt(args[0], 10);
     if (isNaN(max)) {
         var really = utils.getEmoji(client, "reallynigga");
-        message.channel.send(really.toString() + " Bruh, that ain't a number.");
+        message.channel.send(textLoader.getJSON().flavorText.nanDice + really.toString());
         return;
     }
-    if(max <= 0){
-        message.channel.send("Max number has to be equal or higher than your IQ(1). " + utils.getEmoji(client,"420"));
+    if (max <= 0) {
+        message.channel.send(textLoader.getJSON().flavorText.lowDice + utils.getEmoji(client, "420"));
         return;
 
     }
     if (max > 1000000) {
         var yamero = utils.getEmoji(client, "yamero");
-        message.channel.send("Kyaa, onii-chan, that's too big! " + yamero.toString());
+        message.channel.send(textLoader.getJSON().flavorText.diceTooBig + yamero.toString());
         return;
     }
     var msg = "Your roll(s): ";
@@ -52,21 +52,21 @@ exports.diceCommand = function (message, args, client) {
     if (args[1] != undefined) {
         rolls = parseInt(args[1]);
     }
-    if(rolls <= 0 || isNaN(rolls)){
-        message.channel.send("Number of rolls has to be equal or higher than your IQ(1). " + utils.getEmoji(client,"420"));
+    if (rolls <= 0 || isNaN(rolls)) {
+        message.channel.send(textLoader.getJSON().flavorText.lowRolls + utils.getEmoji(client, "420"));
         return;
     }
     if (rolls > 20)
         rolls = 20;
     for (var i = 0; i < rolls; ++i) {
-        var number = utils.getRandomInt(max)+1;
+        var number = utils.getRandomInt(max) + 1;
         msg += number + getFlavorText(client, number) + ", ";
     }
     msg = msg.substring(0, msg.length - 2) + "."
     message.channel.send(msg);
 }
 
-function getServerStatus(address,message, client){
+function getServerStatus(address, message, client) {
     const { exec } = require('child_process');
     exec('mcstatus ' + address + ' status', (err, stdout, stderr) => {
         //`${stderr}`
@@ -78,47 +78,70 @@ function getServerStatus(address,message, client){
             var error_str = stderr;
             error_str = error_str.trim();
             if (error_str.endsWith("timed out")) {
-                message.channel.send("Server offline." + utils.getEmoji(client,"sad").toString());
+                message.channel.send(textLoader.getJSON().flavorText.serverStatusOffline + utils.getEmoji(client, "sad").toString());
             } else {
-                message.channel.send("Something went wrong...");
+                message.channel.send(textLoader.getJSON().flavorText.serverStatusFailed);
             }
         } else {
-            message.channel.send("```"+stdout+"```");
+            message.channel.send("```" + stdout + "```");
         }
-        
+
     });
-    return results;
 }
 
-exports.statusCommand = function(message, args, client) {
+exports.statusCommand = function (message, args, client) {
     if (args[0] == undefined) {
-        message.channel.send(descriptions[1]);
+        message.channel.send(textLoader.getJSON().descriptions[1]);
         return;
     }
+    message.channel.send(textLoader.getJSON().flavorText.serverStatusWait);
     var server_addr = args[0];
-    var results = getServerStatus(server_addr,message, client);  
+    var results = getServerStatus(server_addr, message, client);
 }
 
-exports.serverCommand = function(message, args, client) {
-    if(args[0] === undefined)
-        getServerStatus("dochia.go.ro:25565",message,client);
-    else if(args[0] == "helpd")
-        message.channel.send(descriptions[3]);
+exports.serverCommand = function (message, args, client) {
+    if (args[0] === undefined) {
+        message.channel.send(textLoader.getJSON().flavorText.serverStatusWait);
+        getServerStatus(textLoader.getJSON().myServer, message, client);
+    }
+    else if (args[0] == "help")
+        message.channel.send(textLoader.getJSON().descriptions[3]);
 }
 
-exports.purposeCommand = function(message) {
-    message.channel.send(textLoader.getJSON().miscTextBits.purpose);
+exports.purposeCommand = function (message) {
+    message.channel.send(utils.getRandomValue(textLoader.getJSON().miscTextBits.purpose));
 }
 
-exports.mentionEvent = function(message, client) {
+exports.mentionEvent = function (message, client) {
     var replies = textLoader.mentionReplies();
-    message.channel.send(replies[utils.getRandomInt(replies.length-1)] + " " + utils.getEmoji(client,"wut".toString()));
+    message.channel.send(utils.getRandomValue(replies) + " " + utils.getEmoji(client, "wut".toString()));
 }
 
-exports.chooseCommand = function(message,args) {
-    if(args[0] == undefined) {
+exports.chooseCommand = function (message, args) {
+    if (args[0] == undefined) {
         message.channel.send(textLoader.getJSON().descriptions[4]);
         return;
     }
     message.channel.send(args[utils.getRandomInt(args.length)]);
+}
+
+exports.wrongCommand = function (message) {
+    message.channel.send(textLoader.getJSON().flavorText.wrongCommand);
+}
+
+exports.pingCommand = function (message, args) {
+    if (args[0] == "undefined") {
+        message.channel.send(textLoader.getJSON().descriptions[4]);
+        return;
+    }
+    var address = args[0];
+    const { exec } = require('child_process');
+    exec(textLoader.getJSON().flavorText.pingCommand + address, (err, stdout, stderr) => {
+        if (err) {
+            message.channel.send(textLoader.getJSON().flavorText.serverStatusFailed);
+            console.log(stderr);
+            return;
+        }
+        message.channel.send(textLoader.getJSON().flavorText.pingResponse + "```" + stdout + "```");
+    });
 }
