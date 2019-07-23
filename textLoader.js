@@ -2,6 +2,36 @@ const fs = require('fs');
 
 var mentionReplies = new Array();
 var dynamicText = "";
+var imageCommands = new Map();
+
+exports.loadImageCommands = function(){
+    let rawdata = fs.readFileSync('imageCommands.json');
+    imageCommands = new Map();
+    let commJson = JSON.parse(rawdata);;
+    for(var command in commJson){
+        imageCommands.set(command,commJson[command]);
+    }
+    delete rawdata;
+}
+
+function mapToObj(map){
+    return [...map].reduce((acc,val) => {
+        acc[val[0]]=val[1];
+        return acc;        
+    }, {});
+}
+
+exports.exportImageCommands = function() {
+    
+    fs.writeFile('imageCommands.json', JSON.stringify(mapToObj(imageCommands)), (err) => {
+        if (err) console.log(err);
+        console.log("Successfully saved image commands.");
+    });
+}
+
+exports.getImgCommands = function(){
+    return imageCommands;
+}
 
 exports.getJSON = function(){
     return dynamicText;
@@ -29,7 +59,6 @@ function parseText() {
         mentionReplies.push(dynamicText.mentionReplies[i]);
     }
     delete rawdata;
-    delete fs;
     setInterval(parseText,30000);
     
 }

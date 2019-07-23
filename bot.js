@@ -10,12 +10,13 @@ bot.login(auth.token);
 
 bot.on("ready", () => {
     textLoader.start();
+    textLoader.loadImageCommands();
     console.log("I am ready!");
-    
+
     var channel = bot.channels.find(channel => channel.name == "bot-test");
-    var woke = utils.getEmoji(bot,"woke");
-    channel.send(woke.toString() + utils.getRandomValue(textLoader.getJSON().flavorText.awaken)+ woke.toString());
-    
+    var woke = utils.getEmoji(bot, "woke");
+    channel.send(woke.toString() + utils.getRandomValue(textLoader.getJSON().flavorText.awaken) + woke.toString());
+
 });
 
 bot.on("message", (message) => {
@@ -37,12 +38,12 @@ bot.on("message", (message) => {
                 break;
             case 'status':
                 {
-                   Commands.statusCommand(message,args,bot);
+                    Commands.statusCommand(message, args, bot);
                 }
                 break;
             case 'server':
                 {
-                    Commands.serverCommand(message,args,bot);
+                    Commands.serverCommand(message, args, bot);
                 }
                 break;
             case 'purpose':
@@ -52,22 +53,32 @@ bot.on("message", (message) => {
                 break;
             case 'choose':
                 {
-                    Commands.chooseCommand(message,args);
+                    Commands.chooseCommand(message, args);
                 }
                 break;
             case 'ping':
                 {
-                    Commands.pingCommand(message,args);
+                    Commands.pingCommand(message, args);
+                }
+                break;
+            case 'registerImage':
+                {
+                    Commands.registerCommand(message, args);
+                }
+                break;
+            case 'imageCommands':
+                {
+                    Commands.imageCommands(message);
                 }
                 break;
             default:
                 {
-                    Commands.wrongCommand(message);
+                    Commands.customImageCommand(message);
                 }
                 break;
         }
     }
     else if (message.isMentioned(bot.users.get("603095851195432961"))) {
-        Commands.mentionEvent(message,bot);
+        Commands.mentionEvent(message, bot);
     }
 });

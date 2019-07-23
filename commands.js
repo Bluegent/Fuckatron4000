@@ -5,7 +5,7 @@ exports.commandsCommand = function (message) {
     var command_list = "";
     var commands = textLoader.getJSON().commands;
     for (var i = 0; i < commands.length; ++i) {
-        command_list += commands[i] + " ";
+        command_list += "!"+commands[i] + " ";
     }
     message.channel.send("Commands: \n```" + command_list + "```");
 }
@@ -125,7 +125,7 @@ exports.chooseCommand = function (message, args) {
     message.channel.send(args[utils.getRandomInt(args.length)]);
 }
 
-exports.wrongCommand = function (message) {
+function wrongCommand(message) {
     message.channel.send(textLoader.getJSON().flavorText.wrongCommand);
 }
 
@@ -144,4 +144,51 @@ exports.pingCommand = function (message, args) {
         }
         message.channel.send(textLoader.getJSON().flavorText.pingResponse + "```" + stdout + "```");
     });
+}
+
+exports.customImageCommand = function(message) {
+    var command = message.content.split(' ')[0].replace('!','');
+    if(command == undefined){
+        wrongCommand(message);
+    }
+    if(textLoader.getImgCommands().has(command)){
+        message.channel.send(textLoader.getImgCommands().get(command));
+    } else{
+        wrongCommand(message);
+    }
+}
+
+function checkURL(url) {
+    return(url.match(/\.(jpeg|jpg|gif|png)$/) != null && url.match(/^(http\:\/\/|https\:\/\/)/) != null);
+}
+
+exports.registerCommand = function(message,args ) {
+    var allowAll = true;
+    let users = textLoader.getJSON().authorizedUsers;
+    let author = ""+message.author.id;
+
+    if( allowAll || users.includes(author)){
+        if(args[0] != undefined && args[1] != undefined && checkURL(args[1]) && !textLoader.getImgCommands().has(args[0]) && !textLoader.getJSON().commands.includes(args[0])){
+            textLoader.getImgCommands().set(args[0],args[1]);
+            textLoader.exportImageCommands();
+            message.channel.send(textLoader.getJSON().flavorText.registerComplete);
+        }
+        else{
+            message.channel.send(textLoader.getJSON().descriptions[6]);
+        }
+        
+    }
+    else{
+        message.channel.send(textLoader.getJSON().flavorText.registerWrongUser);
+    }
+}
+
+exports.imageCommands = function(message) {
+    var list = "";
+    
+    var commands = textLoader.getImgCommands();
+    for (const [key, value] of commands.entries()){
+        list += "!"+key+" ";
+    }
+    message.channel.send("Image Commands: \n```" + list + "```");
 }

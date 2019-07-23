@@ -18,17 +18,20 @@
         "Nem tudom.",
         "Ayy lmao.",
         "https://i.imgur.com/zZWw6Po.jpg",
-        "```<offensive shit>```",
+        "`<offensive shit>`",
         "I'm not a bot, you're a bot."
     ],
-    "commands":["!dice", "!status", "!commands", "!server", "!purpose","!choose","!ping"],
+    "commands":["dice", "status", "commands", "server", "purpose","choose","ping","registerImage","imageCommands"],
     "descriptions":[
         "Returns a random number between 0 and the number given. If a second number is given, rolls the dice that many times(max 20). Usage: `!dice <number> <rolls>`",
         "Tells you if a minecraft server is online. Usage: `!status <server address>`",
         "Prints a list of commands. Usage: `!commands`",
         "Prints the status of my minecraft server. Usage `!server` or `!server help`" ,
         "Picks one of a list of strings. Usage: `!choose <option1> <option2> <option3>...`",
-        "Pings a server and returns response time. Usage: `!ping <address>"
+        "Pings a server and returns response time. Usage: `!ping <address>",
+        "Register an image link to be associated with a custom command. Image commands can't be overwrrite, use `!imageCommands` to see a list. Usage: `!register <command> <valid_img_url>`",
+        "Lists all image commands. Usage: `!imageCommands`"
+
     ],
     "miscTextBits":{
         "purpose":["https://i.imgur.com/SlnddRd.png","https://i.imgur.com/DbOCFlh.png"]
@@ -44,7 +47,10 @@
         "serverStatusWait":"Hang on...",
         "wrongCommand":"Bruh, read `!commands`...",
         "pingResponse":"Response: ",
-        "pingCommand":"ping -c 4 "
+        "pingCommand":"ping -c 4 ",
+        "registerWrongUser":"Broke-ass nigga.",
+        "registerComplete":"Fuckatron will remember that..."
     },
-    "myServer":"dochia.go.ro:25565"
+    "myServer":"dochia.go.ro:25565",
+    "authorizedUsers":["446704905944694784"]
 }
