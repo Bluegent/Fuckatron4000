@@ -200,10 +200,13 @@ function authorized(user){
 }
 
 exports.updatecommand = function(message){
-    if(!authorized(message.author))
+    console.log("Attempting update...");
+    message.channel.send(textLoader.getJSON().flavorText.updateText);
+    if(!authorized(message.author)) {
         return;
+    }
     const { exec } = require('child_process');
-    exec("sleep 3; nohup ./update.sh >> update_status.log", (err, stdout, stderr) => {
+    exec(textLoader.getJSON().dynamicCommands.updateCommand, (err, stdout, stderr) => {
         if (err) {
             message.channel.send(textLoader.getJSON().flavorText.serverStatusFailed);
             console.log(stderr);

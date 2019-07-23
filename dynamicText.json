@@ -37,6 +37,9 @@
     "miscTextBits":{
         "purpose":["https://i.imgur.com/SlnddRd.png","https://i.imgur.com/DbOCFlh.png"]
     },
+    "dynamicCommands":{
+        "updateCommand":"sleep 3; nohup ./update.sh >> bot_pipe"
+    },
     "flavorText":{
         "serverStatusFailed":"Dis command's fucked, yo.",
         "serverStatusOffline":"Dat nigga dead.",
@@ -51,6 +54,7 @@
         "pingCommand":"ping -c 4 ",
         "registerWrongUser":"Broke-ass nigga.",
         "registerComplete":"Fuckatron will remember that..."
+        ,"updateText":"I'll be back..."
     },
     "myServer":"192.168.1.5:25565",
     "authorizedUsers":["446704905944694784"]

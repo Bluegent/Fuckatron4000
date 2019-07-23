@@ -9,9 +9,10 @@ var bot = new Discord.Client();
 bot.login(auth.token);
 
 bot.on("ready", () => {
+    console.log("Starting...");
     textLoader.start();
     textLoader.loadImageCommands();
-    console.log("I am ready!");
+    console.log("JSON setup complete.");
 
     var channel = bot.channels.find(channel => channel.name == "bot-test");
     var woke = utils.getEmoji(bot, "woke");
@@ -20,6 +21,7 @@ bot.on("ready", () => {
 });
 
 bot.on("message", (message) => {
+    console.log("On mesage:" +message.content.substr(0,255)+"...")
     if (message.content.startsWith('!')) {
         var args = message.content.substring(1).split(' ');
         var cmd = args[0];
