@@ -1,6 +1,11 @@
 const fs = require('fs');
 
 var mentionReplies = new Array();
+var dynamicText = "";
+
+exports.getJSON = function(){
+    return dynamicText;
+}
 
 exports.mentionReplies = function() {
     return mentionReplies;
@@ -17,12 +22,16 @@ exports.start = function() {
 
 function parseText() {
     let rawdata = fs.readFileSync('dynamicText.json');
-    let mentions = JSON.parse(rawdata);
-
-    for(var i = 0; i< mentions.mentionReplies.length; ++i){
-        mentionReplies.push(mentions.mentionReplies[i]);
+    delete dynamicText;
+    dynamicText = JSON.parse(rawdata);
+    mentionReplies = [];
+    for(var i = 0; i< dynamicText.mentionReplies.length; ++i){
+        mentionReplies.push(dynamicText.mentionReplies[i]);
     }
+    delete rawdata;
+    delete fs;
     setInterval(parseText,5000);
+    
 }
 
 

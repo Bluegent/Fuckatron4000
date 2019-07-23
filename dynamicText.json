@@ -13,6 +13,23 @@
         "",
         "Cyka blyat, pidaras blyat.",
         "What's good, homie?",
-        "Aye?"
-    ]
+        "Aye?",
+        "Idi nahui.",
+        "Nem tudom."
+    ],
+    "commands":["!dice", "!status", "!commands", "!server", "!purpose","!choose"],
+    "descriptions":[
+        "Returns a random number between 0 and the number given. If a second number is given, rolls the dice that many times(max 20). Usage: `!dice <number> <rolls>`",
+        "Tells you if a minecraft server is online. Usage: `!status <server address>`",
+        "Prints a list of commands. Usage: `!commands`",
+        "Prints the status of my minecraft server. Usage `!server` or `!server help`" ,
+        "Picks one of a list of strings. Usage: `!choose <option1> <option2> <option3>...`"
+    ],
+    "miscTextBits":{
+        "purpose":"https://i.imgur.com/SlnddRd.png"
+    },
+    "commandsFlavorText":{
+        "commandFailed":"Something went wrong...",
+        "commandOffline":"Server is offline."
+    }
 }

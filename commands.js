@@ -1,16 +1,9 @@
 var utils = require('./utils.js');
 var textLoader = require('./textLoader.js');
 
-var commands = ["!dice", "!status", "!commands", "!server", "!purpose"];
-var descriptions = [
-    "Returns a random number between 0 and the number given. If a second number is given, rolls the dice that many times(max 20). Usage: `!dice <number> <rolls>`",
-    "Tells you if a minecraft server is online. Usage: `!status <server address>`",
-    "Prints a list of commands. Usage: `!commands`",
-    "Prints the status of my minecraft server. Usage `!server` or `!server help`"
-];
-
 exports.commandsCommand = function (message) {
     var command_list = "";
+    var commands = textLoader.getJSON().commands;
     for (var i = 0; i < commands.length; ++i) {
         command_list += commands[i] + " ";
     }
@@ -114,10 +107,18 @@ exports.serverCommand = function(message, args, client) {
 }
 
 exports.purposeCommand = function(message) {
-    message.channel.send("https://i.imgur.com/hrV0WCp.png");
+    message.channel.send(textLoader.getJSON().miscTextBits.purpose);
 }
 
 exports.mentionEvent = function(message, client) {
     var replies = textLoader.mentionReplies();
     message.channel.send(replies[utils.getRandomInt(replies.length-1)] + " " + utils.getEmoji(client,"wut".toString()));
+}
+
+exports.chooseCommand = function(message,args) {
+    if(args[0] == undefined) {
+        message.channel.send(textLoader.getJSON().descriptions[4]);
+        return;
+    }
+    message.channel.send(args[utils.getRandomInt(args.length)]);
 }

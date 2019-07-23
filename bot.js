@@ -48,6 +48,11 @@ bot.on("message", (message) => {
                     Commands.purposeCommand(message);
                 }
                 break;
+            case 'choose':
+                {
+                    Commands.chooseCommand(message,args);
+                }
+                break;
         }
     }
     else if (message.isMentioned(bot.users.get("603095851195432961"))) {
