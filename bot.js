@@ -86,6 +86,7 @@ bot.on("message", (message) => {
         }
     }
     else if (message.isMentioned(bot.users.get("603095851195432961"))) {
+        console.log("Mentioned.");
         Commands.mentionEvent(message, bot);
     }
 });
