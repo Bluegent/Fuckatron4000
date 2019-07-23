@@ -6,9 +6,11 @@ var descriptions = [
     "Prints the status of my minecraft server. Usage `!server` or `!server help`"
 ];
 
-
+var auth = require('./auth.json');
 
 var Discord = require('discord.js');
+
+
 
 function getRandomInt(max) {
   return Math.floor(Math.random() * Math.floor(max));
@@ -16,7 +18,7 @@ function getRandomInt(max) {
 
 // Initialize Discord Bot
 var bot = new Discord.Client();
-bot.login("NjAzMDk1ODUxMTk1NDMyOTYx.XTa0UA.MwTBlsZO_3yiwNdgs28GIlw7x4I");
+bot.login(auth.token);
 
 bot.on("ready", () => {
     console.log("I am ready!");
