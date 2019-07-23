@@ -21,8 +21,8 @@ bot.on("ready", () => {
 });
 
 bot.on("message", (message) => {
-    console.log("On mesage:" +message.content.substr(0,255)+"...")
     if (message.content.startsWith('!')) {
+        console.log("On mesage:" +message.content.substr(0,255)+"...")
         var args = message.content.substring(1).split(' ');
         var cmd = args[0];
 

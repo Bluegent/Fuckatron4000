@@ -201,10 +201,12 @@ function authorized(user){
 
 exports.updatecommand = function(message){
     console.log("Attempting update...");
-    message.channel.send(textLoader.getJSON().flavorText.updateText);
     if(!authorized(message.author)) {
+        console.log("User "+message.author.username+" not authorized.");
         return;
     }
+    message.channel.send(textLoader.getJSON().flavorText.updateText);
+    console.log("User "+message.author.username+" authorized. Running command \""+textLoader.getJSON().dynamicCommands.updateCommand+"\"");
     const { exec } = require('child_process');
     exec(textLoader.getJSON().dynamicCommands.updateCommand, (err, stdout, stderr) => {
         if (err) {
