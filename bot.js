@@ -1,4 +1,4 @@
-var commands = ["dice","status","commands","server"];
+var commands = ["!dice","!status","!commands","!server"];
 var descriptions = [
     "Returns a random number between 0 and the number given. If a second number is given, rolls the dice that many times(max 20). Usage: `!dice <number> <rolls>`",
     "Tells you if a minecraft server is online. Usage: `!status <server address>`",
