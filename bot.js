@@ -141,4 +141,23 @@ bot.on("message", (message) => {
             break;
         }
      }
+     else if(message.isMentioned(bot.users.get("603095851195432961")))
+    {
+        var tagReplies= [
+            "I heard you were talking shit about me. I'll fuck you up.",
+            "Shabat Shalom, motherfucker.",
+            "The fuck you want?",
+            "Where the bitches at?",
+            "Square up, homeboy.",
+            "New token, who dis?",
+            "What now?",
+            "!commands",
+            "I am a cyber nigga, I browse the dark web.",
+            "Ye?",
+            ""
+        ];
+
+        var emoji = bot.emojis.find(emoji => emoji.name === "wut");
+        message.channel.send(tagReplies[getRandomInt(tagReplies.length)]+" "+emoji.toString());
+    }
 });
