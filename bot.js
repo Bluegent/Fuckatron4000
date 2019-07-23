@@ -1,4 +1,4 @@
-var commands = ["!dice","!status","!commands","!server"];
+var commands = ["!dice","!status","!commands","!server", "!purpose"];
 var descriptions = [
     "Returns a random number between 0 and the number given. If a second number is given, rolls the dice that many times(max 20). Usage: `!dice <number> <rolls>`",
     "Tells you if a minecraft server is online. Usage: `!status <server address>`",
@@ -139,6 +139,11 @@ bot.on("message", (message) => {
                 }
             }
             break;
+            case 'purpose':
+            {   
+                message.channel.send("https://i.imgur.com/hrV0WCp.png");
+            }
+            break;
         }
      }
      else if(message.isMentioned(bot.users.get("603095851195432961")))
@@ -154,7 +159,10 @@ bot.on("message", (message) => {
             "!commands",
             "I am a cyber nigga, I browse the dark web.",
             "Ye?",
-            ""
+            "",
+            "Cyka blyat, pidaras blyat.",
+            "What's good, homie?",
+            "Aye?"    
         ];
 
         var emoji = bot.emojis.find(emoji => emoji.name === "wut");
