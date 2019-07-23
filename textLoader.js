@@ -5,6 +5,7 @@ var dynamicText = "";
 var imageCommands = new Map();
 
 exports.loadImageCommands = function(){
+    console.log("Loading immage commands...");
     let rawdata = fs.readFileSync('imageCommands.json');
     imageCommands = new Map();
     let commJson = JSON.parse(rawdata);;
@@ -12,6 +13,7 @@ exports.loadImageCommands = function(){
         imageCommands.set(command,commJson[command]);
     }
     delete rawdata;
+    console.log("Loaded image commands.");
 }
 
 function mapToObj(map){
@@ -22,7 +24,7 @@ function mapToObj(map){
 }
 
 exports.exportImageCommands = function() {
-    
+    console.log("Write immage commands to file...");
     fs.writeFile('imageCommands.json', JSON.stringify(mapToObj(imageCommands)), (err) => {
         if (err) console.log(err);
         console.log("Successfully saved image commands.");
@@ -51,6 +53,7 @@ exports.start = function() {
 }
 
 function parseText() {
+    console.log("Loading dynamic text from json...");
     let rawdata = fs.readFileSync('dynamicText.json');
     delete dynamicText;
     dynamicText = JSON.parse(rawdata);
@@ -60,6 +63,7 @@ function parseText() {
     }
     delete rawdata;
     setInterval(parseText,30000);
+    console.log("Dynamic text loaded.");
     
 }
 
