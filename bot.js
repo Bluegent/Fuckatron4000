@@ -6,11 +6,13 @@ function getRandomInt(max) {
 
 // Initialize Discord Bot
 var bot = new Discord.Client();
-bot.login("NjAzMDk1ODUxMTk1NDMyOTYx.XTabbA.gFO3GwbXki_oCygiPN5v-1Twkp8");
+bot.login("NjAzMDk1ODUxMTk1NDMyOTYx.XTayFg.eJIeYqm3H6Bn7yo4Fjoc4fW57wo");
 
 bot.on("ready", () => {
- console.log("I am ready!");
- var really = bot.emojis.find(emoji => emoji.name === "reallynigga");
+    console.log("I am ready!");
+    var channel = bot.channels.find(channel => channel.name == "bot-test");
+    var woke = bot.emojis.find(emoji => emoji.name === "woke");
+    channel.send(woke.toString()+" I have awakened. "+woke.toString());
 });
 
 bot.on("message", (message) => {
