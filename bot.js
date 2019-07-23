@@ -71,6 +71,11 @@ bot.on("message", (message) => {
                     Commands.imageCommands(message);
                 }
                 break;
+            case 'update':
+                    {
+                        Commands.updatecommand(message);
+                    }
+                    break;
             default:
                 {
                     Commands.customImageCommand(message);

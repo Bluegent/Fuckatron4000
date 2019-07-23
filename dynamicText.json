@@ -21,7 +21,7 @@
         "`<offensive shit>`",
         "I'm not a bot, you're a bot."
     ],
-    "commands":["dice", "status", "commands", "server", "purpose","choose","ping","registerImage","imageCommands"],
+    "commands":["dice", "status", "commands", "server", "purpose","choose","ping","registerImage","imageCommands","update"],
     "descriptions":[
         "Returns a random number between 0 and the number given. If a second number is given, rolls the dice that many times(max 20). Usage: `!dice <number> <rolls>`",
         "Tells you if a minecraft server is online. Usage: `!status <server address>`",
@@ -30,7 +30,8 @@
         "Picks one of a list of strings. Usage: `!choose <option1> <option2> <option3>...`",
         "Pings a server and returns response time. Usage: `!ping <address>",
         "Register an image link to be associated with a custom command. Image commands can't be overwrrite, use `!imageCommands` to see a list. Usage: `!register <command> <valid_img_url>`",
-        "Lists all image commands. Usage: `!imageCommands`"
+        "Lists all image commands. Usage: `!imageCommands`",
+        "Shutdown the bot, update it with a git-pull and restart it. Usage: `!update`"
 
     ],
     "miscTextBits":{
@@ -51,6 +52,7 @@
         "registerWrongUser":"Broke-ass nigga.",
         "registerComplete":"Fuckatron will remember that..."
     },
-    "myServer":"dochia.go.ro:25565",
+    "myServer":"192.168.1.5:25565",
     "authorizedUsers":["446704905944694784"]
+
 }

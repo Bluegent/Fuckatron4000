@@ -192,3 +192,23 @@ exports.imageCommands = function(message) {
     }
     message.channel.send("Image Commands: \n```" + list + "```");
 }
+
+function authorized(user){
+    let users = textLoader.getJSON().authorizedUsers;
+    let author = ""+user.id;
+    return users.includes(author)
+}
+
+exports.updatecommand = function(message){
+    if(!authorized(message.author))
+        return;
+    const { exec } = require('child_process');
+    exec("sleep 3; nohup ./update.sh >> update_status.log", (err, stdout, stderr) => {
+        if (err) {
+            message.channel.send(textLoader.getJSON().flavorText.serverStatusFailed);
+            console.log(stderr);
+            return;
+        }
+        message.channel.send( "```" + stdout + "```");
+    });
+}
