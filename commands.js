@@ -1,4 +1,5 @@
-var utils = require("./utils.js");
+var utils = require('./utils.js');
+var textLoader = require('./textLoader.js');
 
 var commands = ["!dice", "!status", "!commands", "!server", "!purpose"];
 var descriptions = [
@@ -43,6 +44,11 @@ exports.diceCommand = function (message, args, client) {
         message.channel.send(really.toString() + " Bruh, that ain't a number.");
         return;
     }
+    if(max <= 0){
+        message.channel.send("Max number has to be equal or higher than your IQ(1). " + utils.getEmoji(client,"420"));
+        return;
+
+    }
     if (max > 1000000) {
         var yamero = utils.getEmoji(client, "yamero");
         message.channel.send("Kyaa, onii-chan, that's too big! " + yamero.toString());
@@ -53,8 +59,10 @@ exports.diceCommand = function (message, args, client) {
     if (args[1] != undefined) {
         rolls = parseInt(args[1]);
     }
-    if (rolls < 0)
-        rolls = 1;
+    if(rolls <= 0 || isNaN(rolls)){
+        message.channel.send("Number of rolls has to be equal or higher than your IQ(1). " + utils.getEmoji(client,"420"));
+        return;
+    }
     if (rolls > 20)
         rolls = 20;
     for (var i = 0; i < rolls; ++i) {
@@ -109,23 +117,7 @@ exports.purposeCommand = function(message) {
     message.channel.send("https://i.imgur.com/hrV0WCp.png");
 }
 
-var tagReplies = [
-    "I heard you were talking shit about me. I'll fuck you up.",
-    "Shabat Shalom, motherfucker.",
-    "The fuck you want?",
-    "Where the bitches at?",
-    "Square up, homeboy.",
-    "New token, who dis?",
-    "What now?",
-    "!commands",
-    "I am a cyber nigga, I browse the dark web.",
-    "Ye?",
-    "",
-    "Cyka blyat, pidaras blyat.",
-    "What's good, homie?",
-    "Aye?"
-];
-
 exports.mentionEvent = function(message, client) {
-    message.channel.send(tagReplies[utils.getRandomInt(tagReplies.length)] + " " + utils.getEmoji(client,"wut".toString()));
+    var replies = textLoader.mentionReplies();
+    message.channel.send(replies[utils.getRandomInt(replies.length-1)] + " " + utils.getEmoji(client,"wut".toString()));
 }

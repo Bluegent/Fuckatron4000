@@ -1,7 +1,7 @@
 var Commands = require('./commands.js');
 var auth = require('./auth.json');
 var Discord = require('discord.js');
-var utils = require('./utils.js');
+var textLoader = require('./textLoader.js');
 
 // Initialize Discord Bot
 var bot = new Discord.Client();
@@ -9,9 +9,11 @@ bot.login(auth.token);
 
 bot.on("ready", () => {
     console.log("I am ready!");
+    
     var channel = bot.channels.find(channel => channel.name == "bot-test");
     var woke = bot.emojis.find(emoji => emoji.name === "woke");
     channel.send(woke.toString() + " I have awakened. " + woke.toString());
+    textLoader.start();
 });
 
 bot.on("message", (message) => {
