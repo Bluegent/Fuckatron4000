@@ -24,7 +24,7 @@ function mapToObj(map){
 }
 
 exports.exportImageCommands = function() {
-    console.log("Write immage commands to file...");
+    console.log("Write image commands to file...");
     fs.writeFile('imageCommands.json', JSON.stringify(mapToObj(imageCommands)), (err) => {
         if (err) console.log(err);
         console.log("Successfully saved image commands.");
@@ -61,8 +61,9 @@ function parseText() {
     for(var i = 0; i< dynamicText.mentionReplies.length; ++i){
         mentionReplies.push(dynamicText.mentionReplies[i]);
     }
+    console.log("Mention replies number: "+mentionReplies.length);
     delete rawdata;
-    setInterval(parseText,30000);
+    //setInterval(parseText,30000);
     console.log("Dynamic text loaded.");
     
 }

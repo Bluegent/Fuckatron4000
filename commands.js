@@ -77,6 +77,7 @@ function getServerStatus(address, message, client) {
         if (err) {
             var error_str = stderr;
             error_str = error_str.trim();
+            console.log(error_str);
             if (error_str.endsWith("timed out")) {
                 message.channel.send(textLoader.getJSON().flavorText.serverStatusOffline + utils.getEmoji(client, "sad").toString());
             } else {
