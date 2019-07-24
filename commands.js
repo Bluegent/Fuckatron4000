@@ -225,12 +225,12 @@ exports.botStatusCommand = function (message) {
     let cpuUsage = utils.getCPUUSage();
     let now = new Date().getTime()
     let uptime = now - textLoader.getStartTime();
-    let msg = "";
+    let msg = "```";
     for (let key in used) {
         ramUsage += Math.round(used[key] / 1024 / 1024 * 100) / 100;
     }
     msg += "RAM Usage : " + Math.floor(ramUsage) + " MB \n";
     msg += "CPU Usage: " + cpuUsage + " % \n";
-    msg += "Uptime: " + utils.secondsToString(uptime / 1000);
+    msg += "Uptime: " + utils.secondsToString(Math.floor(uptime / 1000))+"```";
     message.channel.send(msg);
 }
