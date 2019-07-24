@@ -229,7 +229,7 @@ exports.botStatusCommand = function (message) {
     for (let key in used) {
         ramUsage += Math.round(used[key] / 1024 / 1024 * 100) / 100;
     }
-    msg += "RAM Usage : " + Math.floor(ramUsage) + " MB \n";
+    msg += "RAM Usage: " + Math.floor(ramUsage) + " MB \n";
     msg += "CPU Usage: " + cpuUsage + " % \n";
     msg += "Uptime: " + utils.secondsToString(Math.floor(uptime / 1000))+"```";
     message.channel.send(msg);
