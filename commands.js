@@ -87,15 +87,42 @@ function getServerStatus(address) {
 function getRightFromChar(string, char) {
     if(!string.includes(char))
         return "";
-    return string.substring(string.indexOf(char), string.length - 1);
+    return string.substring(string.indexOf(char), string.length -1);
 }
 
 function getLeftFromChar(string, char) {
     if(!string.includes(char))
         return "";
-    return string.substring(0, string.indexOf(char) - 1);
+    return string.substring(0, string.indexOf(char));
 }
 
+function parseMcstatusOutput(output){
+    var message = "Server is online.\n";
+    var lines = output.split("\n");
+    message += lines[0]+"\n";
+
+    var desc = getRightFromChar(lines[1]," ").replace("\"", "").split(":")[1].replace(/\{|\}/,"");
+    message +=  "description: " + desc.trim()+ "\n";
+    
+    var playerInfo = getRightFromChar(lines[2]," ").replace(/\[|\]|\'/,"").trim();
+
+    console.log("playerinfo: "+ playerInfo);
+    message += "players: " + playerInfo.split(" ")[0];
+
+    if (!playerInfo.startsWith('0')) {
+        message+=" ( ";
+        var players = getRightFromChar(playerInfo," ");
+        var playersList = players.split(",");
+        players = "";
+        for(var i = 0; i < playersList.length; ++i){
+            var player = playersList[i].trim().replace("'","");
+            players+= getLeftFromChar(player," ")+" ";
+        }
+        message+= players+")";
+    }
+    console.log("MSG: "+message);
+    return message;
+}
 function outputStatusResult(address, msg, client) {
     var result = getServerStatus(address);
     if (result[0] === true) {
@@ -105,27 +132,7 @@ function outputStatusResult(address, msg, client) {
             msg.channel.send(textLoader.getJSON().flavorText.serverStatusFailed);
         }
     } else {
-        var message = "Server is online.\n";
-        var lines = result[1].split("\n");
-        message += lines[0]+"\n";
-
-        var desc = getRightFromChar(lines[1]," ").replace("\"", "").split(":")[1].replace(/\{|\}/,"");
-        message +=  "description: " + desc.trim()+ "\n";
-        
-        var playerInfo = getRightFromChar(lines[2]," ").replace(/\[|\]|\'/,"").trim();
-
-        console.log("playerinfo: "+ playerInfo);
-        message += "players: " + playerInfo.split(" ")[1]+"\n";
-
-        if (!playerInfo.startsWith('0')) {
-            var players = getRightFromChar(playerInfo," ");
-            var playersList = players.split(", ");
-            for(var i = 0; i < players.length; ++i){
-                playersList+= getLeftFromChar(players[i]," ")+" ";
-                console.log(playersList);
-            }
-            message+= playersList;
-        }
+        var message = parseMcstatusOutput(result[1]);
         msg.channel.send("```" + message + "```");
     }
 }
