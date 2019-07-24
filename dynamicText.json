@@ -32,7 +32,7 @@
         "Register an image link to be associated with a custom command. Image commands can't be overwrrite, use `!imageCommands` to see a list. Usage: `!register <command> <valid_img_url>`",
         "Lists all image commands. Usage: `!imageCommands`",
         "Shutdown the bot, update it with a git-pull and restart it. Usage: `!update`",
-        "Returns a short status message from the bot."
+        "Returns a short status message from the bot. Usage: "
 
     ],
     "miscTextBits":{

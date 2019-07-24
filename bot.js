@@ -22,7 +22,7 @@ bot.on("ready", () => {
 
 bot.on("message", (message) => {
     if (message.content.startsWith('!')) {
-        console.log("On mesage:" +message.content.substr(0,255)+"...")
+        console.log("On mesage:" + message.content.substr(0, 255) + "...")
         var args = message.content.substring(1).split(' ');
         var cmd = args[0];
 
@@ -74,15 +74,15 @@ bot.on("message", (message) => {
                 }
                 break;
             case 'update':
-                    {
-                        Commands.updatecommand(message);
-                    }
-                    break;
+                {
+                    Commands.updatecommand(message);
+                }
+                break;
             case 'botStatus':
-                    {
-                        Commands.botStatusCommand(message);
-                    }
-                    break;
+                {
+                    Commands.botStatusCommand(message);
+                }
+                break;
             default:
                 {
                     Commands.customImageCommand(message);

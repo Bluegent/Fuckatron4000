@@ -5,7 +5,7 @@ exports.commandsCommand = function (message) {
     var command_list = "";
     var commands = textLoader.getJSON().commands;
     for (var i = 0; i < commands.length; ++i) {
-        command_list += "!"+commands[i] + " ";
+        command_list += "!" + commands[i] + " ";
     }
     message.channel.send("Commands: \n```" + command_list + "```");
 }
@@ -147,67 +147,67 @@ exports.pingCommand = function (message, args) {
     });
 }
 
-exports.customImageCommand = function(message) {
-    var command = message.content.split(' ')[0].replace('!','');
-    if(command == undefined){
+exports.customImageCommand = function (message) {
+    var command = message.content.split(' ')[0].replace('!', '');
+    if (command == undefined) {
         wrongCommand(message);
     }
-    if(textLoader.getImgCommands().has(command)){
+    if (textLoader.getImgCommands().has(command)) {
         message.channel.send(textLoader.getImgCommands().get(command));
-    } else{
+    } else {
         wrongCommand(message);
     }
 }
 
 function checkURL(url) {
-    return(url.match(/\.(jpeg|jpg|gif|png)$/) != null && url.match(/^(http\:\/\/|https\:\/\/)/) != null);
+    return (url.match(/\.(jpeg|jpg|gif|png)$/) != null && url.match(/^(http\:\/\/|https\:\/\/)/) != null);
 }
 
-exports.registerCommand = function(message,args ) {
+exports.registerCommand = function (message, args) {
     var allowAll = true;
     let users = textLoader.getJSON().authorizedUsers;
-    let author = ""+message.author.id;
+    let author = "" + message.author.id;
 
-    if( allowAll || users.includes(author)){
-        if(args[0] != undefined && args[1] != undefined && checkURL(args[1]) && !textLoader.getImgCommands().has(args[0]) && !textLoader.getJSON().commands.includes(args[0])){
-            textLoader.getImgCommands().set(args[0],args[1]);
+    if (allowAll || users.includes(author)) {
+        if (args[0] != undefined && args[1] != undefined && checkURL(args[1]) && !textLoader.getImgCommands().has(args[0]) && !textLoader.getJSON().commands.includes(args[0])) {
+            textLoader.getImgCommands().set(args[0], args[1]);
             textLoader.exportImageCommands();
             message.channel.send(textLoader.getJSON().flavorText.registerComplete);
         }
-        else{
+        else {
             message.channel.send(textLoader.getJSON().descriptions[6]);
         }
-        
+
     }
-    else{
+    else {
         message.channel.send(textLoader.getJSON().flavorText.registerWrongUser);
     }
 }
 
-exports.imageCommands = function(message) {
+exports.imageCommands = function (message) {
     var list = "";
-    
+
     var commands = textLoader.getImgCommands();
-    for (const [key, value] of commands.entries()){
-        list += "!"+key+" ";
+    for (const [key, value] of commands.entries()) {
+        list += "!" + key + " ";
     }
     message.channel.send("Image Commands: \n```" + list + "```");
 }
 
-function authorized(user){
+function authorized(user) {
     let users = textLoader.getJSON().authorizedUsers;
-    let author = ""+user.id;
+    let author = "" + user.id;
     return users.includes(author)
 }
 
-exports.updatecommand = function(message){
+exports.updatecommand = function (message) {
     console.log("Attempting update...");
-    if(!authorized(message.author)) {
-        console.log("User "+message.author.username+" not authorized.");
+    if (!authorized(message.author)) {
+        console.log("User " + message.author.username + " not authorized.");
         return;
     }
     message.channel.send(textLoader.getJSON().flavorText.updateText);
-    console.log("User "+message.author.username+" authorized. Running command \""+textLoader.getJSON().dynamicCommands.updateCommand+"\"");
+    console.log("User " + message.author.username + " authorized. Running command \"" + textLoader.getJSON().dynamicCommands.updateCommand + "\"");
     const { exec } = require('child_process');
     exec(textLoader.getJSON().dynamicCommands.updateCommand, (err, stdout, stderr) => {
         if (err) {
@@ -215,13 +215,22 @@ exports.updatecommand = function(message){
             console.log(stderr);
             return;
         }
-        message.channel.send( "```" + stdout + "```");
+        message.channel.send("```" + stdout + "```");
     });
 }
 
-exports.botStatusCommand = function(message) {
+exports.botStatusCommand = function (message) {
     const used = process.memoryUsage();
+    let ramUsage = 0;
+    let cpuUsage = utils.getCPUUSage();
+    let now = new Date().getTime()
+    let uptime = now - textLoader.getStartTime();
+    let msg = "";
     for (let key in used) {
-        console.log(`${key} ${Math.round(used[key] / 1024 / 1024 * 100) / 100} MB`);
+        ramUsage += Math.round(used[key] / 1024 / 1024 * 100) / 100;
     }
+    msg += "RAM Usage : " + Math.floor(ramUsage) + " MB \n";
+    msg += "CPU Usage: " + cpuUsage + " % \n";
+    msg += "Uptime: " + utils.secondsToString(uptime / 1000);
+    message.channel.send(msg);
 }

@@ -1,8 +1,12 @@
 const fs = require('fs');
 
+
+var startTime;
 var mentionReplies = new Array();
 var dynamicText = "";
 var imageCommands = new Map();
+exports.getStartTime =  function() { return startTime};
+
 
 exports.loadImageCommands = function(){
     console.log("Loading immage commands...");
@@ -43,12 +47,9 @@ exports.mentionReplies = function() {
     return mentionReplies;
 }
 
-var test = "";
-exports.test = function(){
-    return test;
-}
-
 exports.start = function() {
+   startTime = new Date().getTime();
+   prevUsage = process.cpuUsage();
    parseText();
 }
 
