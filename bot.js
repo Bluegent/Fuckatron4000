@@ -17,6 +17,9 @@ bot.on("ready", () => {
     var channel = bot.channels.find(channel => channel.name == "bot-test");
     var woke = utils.getEmoji(bot, "woke");
     channel.send(woke.toString() + utils.getRandomValue(textLoader.getJSON().flavorText.awaken) + woke.toString());
+    var log = textLoader.getLastStartUplog();
+    if(log!==undefined)
+        channel.send("Startup log:```" + log + "```");
 
 });
 

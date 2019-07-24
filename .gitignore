@@ -2,4 +2,4 @@ node_modules
 auth.json
 update_status.log
 nohup.out
-
+last_update.log

@@ -8,6 +8,21 @@ var imageCommands = new Map();
 exports.getStartTime =  function() { return startTime};
 
 
+exports.getLastStartUplog = function(){
+    console.log("Getting last startup log...");
+    let data = undefined;
+    try {
+        data = fs.readFileSync('last_update.log');
+    } catch (err) {
+        console.log("Update log does not exist.");
+        return data;
+    }
+    console.log("data: "+data);
+    console.log("Log retrieved.");
+    return data;
+    
+}
+
 exports.loadImageCommands = function(){
     console.log("Loading immage commands...");
     let rawdata = fs.readFileSync('imageCommands.json');

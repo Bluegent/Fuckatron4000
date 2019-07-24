@@ -4,5 +4,5 @@ killall node
 sleep 5
 git pull
 sleep 5
-nohup node bot.js
+nohup node bot.js &
 echo " #================================#"
