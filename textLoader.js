@@ -17,7 +17,6 @@ exports.getLastStartUplog = function(){
         console.log("Update log does not exist.");
         return data;
     }
-    console.log("data: "+data);
     console.log("Log retrieved.");
     return data;
     
