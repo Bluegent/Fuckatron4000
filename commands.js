@@ -105,11 +105,9 @@ function parseMcstatusOutput(output){
     message +=  "description: " + desc.trim()+ "\n";
     
     var playerInfo = getRightFromChar(lines[2]," ").replace(/\[|\]|\'/,"").trim();
-
-    console.log("playerinfo: "+ playerInfo);
     message += "players: " + playerInfo.split(" ")[0];
 
-    if (!playerInfo.startsWith('0')) {
+    if (!playerInfo.startsWith("0")) {
         message+=" ( ";
         var players = getRightFromChar(playerInfo," ");
         var playersList = players.split(",");
@@ -120,7 +118,6 @@ function parseMcstatusOutput(output){
         }
         message+= players+")";
     }
-    console.log("MSG: "+message);
     return message;
 }
 function outputStatusResult(address, msg, client) {
