@@ -45,7 +45,7 @@
     "flavorText":{
         "serverStatusFailed":"Dis command's fucked, yo.",
         "serverStatusOffline":"Dat nigga dead.",
-        "awaken":["I have awakened.", "https://i.imgur.com/kBb54Y7.jpg","Real shit.","Battelcruiser operational.","I need your clothes, your boots and your bike."],
+        "awaken":["An ancient evil is roused."],
         "lowRolls":"Number of rolls has to be >= your IQ(1) and <= 20.",
         "lowDice":"Max number has to be equal >= your IQ(1). ",
         "nanDice":"Bruh, that ain't a number. ",
