@@ -1,5 +1,6 @@
 var utils = require('./utils.js');
 var textLoader = require('./textLoader.js');
+const exec = require('child_process');
 
 exports.commandsCommand = function (message) {
     var command_list = "";
@@ -66,44 +67,83 @@ exports.diceCommand = function (message, args, client) {
     message.channel.send(msg);
 }
 
-function getServerStatus(address, message, client) {
-    const { exec } = require('child_process');
-    exec('mcstatus ' + address + ' status', (err, stdout, stderr) => {
-        //`${stderr}`
 
-        var stderr = `${stderr}`;
-        var stdout = `${stdout}`;
+function executeCommandSync(command) {
+    var err_flag = false;
+    try {
+        var res = exec.execSync(command, { stdio: 'pipe' }).toString();
+        return [err_flag, res];
+    } catch (error) {
+        err_flag = true;
+        var err_out = error.stderr.toString();
+        return [err_flag, err_out];
+    }
+}
 
-        if (err) {
-            var error_str = stderr;
-            error_str = error_str.trim();
-            console.log(error_str);
-            if (error_str.endsWith("timed out")) {
-                message.channel.send(textLoader.getJSON().flavorText.serverStatusOffline + utils.getEmoji(client, "sad").toString());
-            } else {
-                message.channel.send(textLoader.getJSON().flavorText.serverStatusFailed);
-            }
+function getServerStatus(address) {
+    return executeCommandSync('mcstatus ' + address + ' status');
+}
+
+function getRightFromChar(string, char) {
+    if(!string.includes(char))
+        return "";
+    return string.substring(string.indexOf(char), string.length - 1);
+}
+
+function getLeftFromChar(string, char) {
+    if(!string.includes(char))
+        return "";
+    return string.substring(0, string.indexOf(char) - 1);
+}
+
+function outputStatusResult(address, msg, client) {
+    var result = getServerStatus(address);
+    if (result[0] === true) {
+        if (result[1].includes("timed out")) {
+            msg.channel.send(textLoader.getJSON().flavorText.serverStatusOffline + utils.getEmoji(client, "sad").toString());
         } else {
-            message.channel.send("```" + stdout + "```");
+            msg.channel.send(textLoader.getJSON().flavorText.serverStatusFailed);
         }
+    } else {
+        var message = "Server is online.\n";
+        var lines = result[1].split("\n");
+        message += lines[0]+"\n";
 
-    });
+        var desc = getRightFromChar(lines[1]," ").replace("\"", "").split(":")[1].replace(/\{|\}/,"");
+        message +=  "description: " + desc.trim()+ "\n";
+        
+        var playerInfo = getRightFromChar(lines[2]," ").replace(/\[|\]|\'/,"").trim();
+
+        console.log("playerinfo: "+ playerInfo);
+        message += "players: " + playerInfo.split(" ")[1]+"\n";
+
+        if (!playerInfo.startsWith('0')) {
+            var players = getRightFromChar(playerInfo," ");
+            var playersList = players.split(", ");
+            for(var i = 0; i < players.length; ++i){
+                playersList+= getLeftFromChar(players[i]," ")+" ";
+                console.log(playersList);
+            }
+            message+= playersList;
+        }
+        msg.channel.send("```" + message + "```");
+    }
 }
 
 exports.statusCommand = function (message, args, client) {
-    if (args[0] == undefined) {
+    if (args[0] === undefined) {
         message.channel.send(textLoader.getJSON().descriptions[1]);
         return;
     }
     message.channel.send(textLoader.getJSON().flavorText.serverStatusWait);
     var server_addr = args[0];
-    var results = getServerStatus(server_addr, message, client);
+    outputStatusResult(server_addr, message, client);
 }
 
 exports.serverCommand = function (message, args, client) {
     if (args[0] === undefined) {
         message.channel.send(textLoader.getJSON().flavorText.serverStatusWait);
-        getServerStatus(textLoader.getJSON().myServer, message, client);
+        outputStatusResult(textLoader.getJSON().myServer, message, client);
     }
     else if (args[0] == "help")
         message.channel.send(textLoader.getJSON().descriptions[3]);
@@ -131,20 +171,18 @@ function wrongCommand(message) {
 }
 
 exports.pingCommand = function (message, args) {
-    if (args[0] == "undefined") {
+    if (args[0] == undefined) {
         message.channel.send(textLoader.getJSON().descriptions[4]);
         return;
     }
     var address = args[0];
-    const { exec } = require('child_process');
-    exec(textLoader.getJSON().flavorText.pingCommand + address, (err, stdout, stderr) => {
-        if (err) {
-            message.channel.send(textLoader.getJSON().flavorText.serverStatusFailed);
-            console.log(stderr);
-            return;
-        }
-        message.channel.send(textLoader.getJSON().flavorText.pingResponse + "```" + stdout + "```");
-    });
+    var result = executeCommandSync(textLoader.getJSON().flavorText.pingCommand + address);
+    if (result[0] === true) {
+        message.channel.send(textLoader.getJSON().flavorText.serverStatusFailed);
+        console.log(result[1]);
+        return;
+    }
+    message.channel.send(textLoader.getJSON().flavorText.pingResponse + "```" + result[1] + "```");
 }
 
 exports.customImageCommand = function (message) {
@@ -160,7 +198,7 @@ exports.customImageCommand = function (message) {
 }
 
 function checkURL(url) {
-    return (url.match(/\.(jpeg|jpg|gif|png)$/) != null && url.match(/^(http\:\/\/|https\:\/\/)/) != null);
+    return (url.match(/\.(jpeg|jpg|gif|png|mp4|webm|mkv)$/) != null && url.match(/^(http\:\/\/|https\:\/\/)/) != null);
 }
 
 exports.registerCommand = function (message, args) {
@@ -208,15 +246,14 @@ exports.updatecommand = function (message) {
     }
     message.channel.send(textLoader.getJSON().flavorText.updateText);
     console.log("User " + message.author.username + " authorized. Running command \"" + textLoader.getJSON().dynamicCommands.updateCommand + "\"");
-    const { exec } = require('child_process');
-    exec(textLoader.getJSON().dynamicCommands.updateCommand, (err, stdout, stderr) => {
-        if (err) {
-            message.channel.send(textLoader.getJSON().flavorText.serverStatusFailed);
-            console.log(stderr);
-            return;
-        }
-        message.channel.send("```" + stdout + "```");
-    });
+
+    var result = executeCommandSync(textLoader.getJSON().dynamicCommands.updateCommand);
+    message.channel.send(textLoader.getJSON().flavorText.serverStatusFailed);
+    if (result[0] === true) {
+        message.channel.send(textLoader.getJSON().flavorText.serverStatusFailed);
+        console.log(result[1]);
+        return;
+    }
 }
 
 exports.botStatusCommand = function (message) {
@@ -231,6 +268,6 @@ exports.botStatusCommand = function (message) {
     }
     msg += "RAM Usage: " + Math.floor(ramUsage) + " MB \n";
     msg += "CPU Usage: " + cpuUsage + " % \n";
-    msg += "Uptime: " + utils.secondsToString(Math.floor(uptime / 1000))+"```";
+    msg += "Uptime: " + utils.secondsToString(Math.floor(uptime / 1000)) + "```";
     message.channel.send(msg);
 }
