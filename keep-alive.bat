@@ -1,16 +1,22 @@
 @echo off
-SET CHECK_FILE=%1\%2
+SET CHECK_FILE=%cd%\%1
 SET COMMAND_TO_RUN=%3
+SET FOLDER=%2
+SET ORIG_FOLER=%~dp0
+echo file: %CHECK_FILE%
+echo command: %COMMAND_TO_RUN%
+echo folder: %FOLDER%
 
-echo "file:" %CHECK_FILE%
-echo "command:" %COMMAND_TO_RUN%
 
 :loop_start
+cd %FOLDER%
 if exist %CHECK_FILE% (
     del %CHECK_FILE%
-    %COMMAND_TO_RUN%
+    call %COMMAND_TO_RUN%
 ) else (
-    echo "file not found."
+    echo File not found.
 )
-timeout /t 10
+cd %ORIG_FOLER%
+timeout /nobreak 10
+
 goto loop_start
