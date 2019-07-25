@@ -39,7 +39,8 @@
         "purpose":["https://i.imgur.com/SlnddRd.png","https://i.imgur.com/DbOCFlh.png"]
     },
     "dynamicCommands":{
-        "updateCommand":"sleep 3; nohup ./update.sh | tee last_update.log >> bot_pipe" ,
+        "updateCommandPart1":"sleep 3; nohup ./update.sh " ,
+        "updatecommandPart2":" | tee last_update.log >> bot_pipe",
         "psShellCommand":"ps aux | grep node"
     },
     "flavorText":{

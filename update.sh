@@ -1,6 +1,6 @@
 #!/bin/sh
 echo "#================================#"
-killall node
+kill $1
 sleep 1
 echo "Attempting git pull..."
 git pull

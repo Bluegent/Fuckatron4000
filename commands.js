@@ -249,9 +249,12 @@ exports.updatecommand = function (message) {
         return;
     }
     message.channel.send(textLoader.getJSON().flavorText.updateText);
-    console.log("User " + message.author.username + " authorized. Running command \"" + textLoader.getJSON().dynamicCommands.updateCommand + "\"");
+    
 
-    var result = executeCommandSync(textLoader.getJSON().dynamicCommands.updateCommand);
+    var command = textLoader.getJSON().dynamicCommands.updateCommandPart1+process.pid+textLoader.getJSON().dynamicCommands.updateCommandPart2;
+    console.log("User " + message.author.username + " authorized. Running command \"" + command + "\"");
+    
+    var result = executeCommandSync(command);
     message.channel.send(textLoader.getJSON().flavorText.serverStatusFailed);
     if (result[0] === true) {
         message.channel.send(textLoader.getJSON().flavorText.serverStatusFailed);
