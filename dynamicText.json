@@ -35,6 +35,7 @@
         ,{"command":"memecommands","desc":"Lists all meme commands. Usage: `$command$"}
         ,{"command":"update","desc":"Shutdown the bot, update it with a git-pull and restart it. Usage: `$command$`"}
         ,{"command":"botstatus","desc":"Returns a short status message from the bot. Usage: `$command$`"}
+        ,{"command":"cmd","desc":"Run a command on the hosted machine. Note: only admin can do this. Usage: $command$ <command arg arg ...>"}
     ],
     "miscTextBits":{
         "purpose":["https://i.imgur.com/SlnddRd.png","https://i.imgur.com/DbOCFlh.png"]

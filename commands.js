@@ -26,7 +26,7 @@ function getServerStatus(address) {
 function getRightFromChar(string, char) {
     if (!string.includes(char))
         return "";
-    return string.substring(string.indexOf(char), string.length - 1);
+    return string.substring(string.indexOf(char), string.length);
 }
 
 function getLeftFromChar(string, char) {
@@ -73,10 +73,6 @@ function parseMcstatusOutput(output) {
         message += players + ")";
     }
     return message;
-}
-
-function wrongCommand(message) {
-    message.channel.send(textLoader.getJSON().flavorText.wrongCommand);
 }
 
 function checkURL(url) {
@@ -128,6 +124,7 @@ exports.mapCommands = function () {
     commandMap.get("memecommands").func = memeCommands;
     commandMap.get("update").func = updateCommand;
     commandMap.get("botstatus").func = botStatusCommand;
+    commandMap.get("cmd").func = cmdCommand;
 
     console.log("All commands mapped.");
 }
@@ -358,4 +355,20 @@ function botStatusCommand(message,client) {
     msg += "CPU Usage: " + cpuUsage + " % \n";
     msg += "Uptime: " + utils.secondsToString(Math.floor(uptime / 1000)) + "```";
     message.channel.send(msg);
+}
+
+function cmdCommand(message,client) {
+    console.log("Attempting cmd...");
+    if (!authorized(message.author)) {
+        console.log("User " + message.author.username + " not authorized.");
+        return;
+    }
+    var command = getRightFromChar(message.content," ").trim();
+    console.log("User " + message.author.username + " authorized. Running command \"" + command + "\"");
+
+    var result = executeCommandSync(command);
+    var cmdResult = result[1].substring(0,1500);
+    if(cmdResult.length>1500)
+        cmdResult+="[...]";
+    message.channel.send("Output: ```"+cmdResult+"```");
 }
