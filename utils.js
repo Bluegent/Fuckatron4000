@@ -1,5 +1,4 @@
 var osu = require('node-os-utils');
-
 var cpu = osu.cpu;
 
 function getRandomInt(max) {

@@ -138,7 +138,7 @@ exports.onMessage = function (message, client) {
     if (command !== undefined && typeof command.func === 'function') {
         command.func(message, client);
     } else {
-        customMemeCommand(message,client);
+        customMemeCommand(message, client);
     }
 }
 
@@ -151,9 +151,9 @@ exports.mentionEvent = function (message, client) {
 }
 
 //custom meme command
-function customMemeCommand(message,client) {
-    
-    if(message.content.includes(commandChar)) {    
+function customMemeCommand(message, client) {
+
+    if (message.content.includes(commandChar)) {
         var command = message.content.split(' ')[0].replace(commandChar, '');
         if (textLoader.getImgCommands().has(command)) {
             message.channel.send(textLoader.getImgCommands().get(command));
@@ -271,7 +271,7 @@ function chooseCommand(message, client) {
     message.channel.send(args[utils.getRandomInt(args.length)]);
 }
 
-function pingCommand (message, client) {
+function pingCommand(message, client) {
     var args = getArgs(message.content);
     if (args[0] == undefined) {
         message.channel.send(textLoader.getJSON().descriptions[4]);
@@ -311,7 +311,7 @@ function registerCommand(message, client) {
     }
 }
 
-function memeCommands(message,client) {
+function memeCommands(message, client) {
     var list = "";
 
     var commands = textLoader.getImgCommands();
@@ -321,7 +321,7 @@ function memeCommands(message,client) {
     message.channel.send("Image Commands(case sensitive!): \n```" + list + "```");
 }
 
-function updateCommand(message,client) {
+function updateCommand(message, client) {
     console.log("Attempting update...");
     if (!authorized(message.author)) {
         console.log("User " + message.author.username + " not authorized.");
@@ -341,7 +341,7 @@ function updateCommand(message,client) {
     }
 }
 
-function botStatusCommand(message,client) {
+function botStatusCommand(message, client) {
     const used = process.memoryUsage();
     let ramUsage = 0;
     let cpuUsage = utils.getCPUUSage();
@@ -353,23 +353,24 @@ function botStatusCommand(message,client) {
     }
     msg += "RAM Usage: " + Math.floor(ramUsage) + " MB \n";
     msg += "CPU Usage: " + cpuUsage + " % \n";
-    msg += "Uptime: " + utils.secondsToString(Math.floor(uptime / 1000)) + "```";
-    msg+= "PID: " +`${process.pid}`;
+    msg += "Uptime: " + utils.secondsToString(Math.floor(uptime / 1000)) + "\n";
+    msg += "PID: " + `${process.pid}`;
+    msg += "```";
     message.channel.send(msg);
 }
 
-function cmdCommand(message,client) {
+function cmdCommand(message, client) {
     console.log("Attempting cmd...");
     if (!authorized(message.author)) {
         console.log("User " + message.author.username + " not authorized.");
         return;
     }
-    var command = getRightFromChar(message.content," ").trim();
+    var command = getRightFromChar(message.content, " ").trim();
     console.log("User " + message.author.username + " authorized. Running command \"" + command + "\"");
 
     var result = executeCommandSync(command);
-    var cmdResult = result[1].substring(0,1500);
-    if(cmdResult.length>1500)
-        cmdResult+="[...]";
-    message.channel.send("Output: ```"+cmdResult+"```");
+    var cmdResult = result[1].substring(0, 1500);
+    if (cmdResult.length > 1500)
+        cmdResult += "[...]";
+    message.channel.send("Output: ```" + cmdResult + "```");
 }
