@@ -354,6 +354,7 @@ function botStatusCommand(message,client) {
     msg += "RAM Usage: " + Math.floor(ramUsage) + " MB \n";
     msg += "CPU Usage: " + cpuUsage + " % \n";
     msg += "Uptime: " + utils.secondsToString(Math.floor(uptime / 1000)) + "```";
+    msg+= "PID: " +`${process.pid}`;
     message.channel.send(msg);
 }
 
