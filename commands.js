@@ -372,5 +372,9 @@ function cmdCommand(message, client) {
     var cmdResult = result[1].substring(0, 1500);
     if (cmdResult.length > 1500)
         cmdResult += "[...]";
-    message.channel.send("Output: ```" + cmdResult + "```");
+    var channel = client.channels.find(channel => channel.name == "bot-test");
+    if(cmdResult.length = 0)
+        channel.send("Executed with no output.")
+    else
+        channel.send("Output: ```" + cmdResult + "```");
 }
