@@ -2,15 +2,38 @@ var utils = require('./utils.js');
 var textLoader = require('./textLoader.js');
 const exec = require('child_process');
 
-exports.commandsCommand = function (message) {
-    var command_list = "";
-    var commands = textLoader.getJSON().commands;
-    for (var i = 0; i < commands.length; ++i) {
-        command_list += "!" + commands[i] + " ";
-    }
-    message.channel.send("Commands: \n```" + command_list + "```");
+
+var commandMap = new Map();
+var commandChar = "!";
+
+
+//Utils
+function getArgs(content) {
+    var args = content.split(" ");
+    args = args.splice(1);
+    return args;
 }
 
+
+function getCommand(content) {
+    return content.split(" ")[0].replace(commandChar, "").toLowerCase();
+}
+
+function getServerStatus(address) {
+    return executeCommandSync('mcstatus ' + address + ' status');
+}
+
+function getRightFromChar(string, char) {
+    if (!string.includes(char))
+        return "";
+    return string.substring(string.indexOf(char), string.length - 1);
+}
+
+function getLeftFromChar(string, char) {
+    if (!string.includes(char))
+        return "";
+    return string.substring(0, string.indexOf(char));
+}
 
 function getFlavorText(client, number) {
     var result = "";
@@ -27,7 +50,144 @@ function getFlavorText(client, number) {
     return result;
 }
 
-exports.diceCommand = function (message, args, client) {
+function parseMcstatusOutput(output) {
+    var message = "Server is online.\n";
+    var lines = output.split("\n");
+    message += lines[0] + "\n";
+
+    var desc = getRightFromChar(lines[1], " ").replace("\"", "").split(":")[1].replace(/\{|\}/, "");
+    message += "description: " + desc.trim() + "\n";
+
+    var playerInfo = getRightFromChar(lines[2], " ").replace(/\[|\]|\'/, "").trim();
+    message += "players: " + playerInfo.split(" ")[0];
+
+    if (!playerInfo.startsWith("0")) {
+        message += " ( ";
+        var players = getRightFromChar(playerInfo, " ");
+        var playersList = players.split(",");
+        players = "";
+        for (var i = 0; i < playersList.length; ++i) {
+            var player = playersList[i].trim().replace("'", "");
+            players += getLeftFromChar(player, " ") + " ";
+        }
+        message += players + ")";
+    }
+    return message;
+}
+
+function wrongCommand(message) {
+    message.channel.send(textLoader.getJSON().flavorText.wrongCommand);
+}
+
+function checkURL(url) {
+    return (url.match(/\.(jpeg|jpg|gif|png|mp4|webm|mkv)$/) != null && url.match(/^(http\:\/\/|https\:\/\/)/) != null);
+}
+
+function executeCommandSync(command) {
+    var err_flag = false;
+    try {
+        var res = exec.execSync(command, { stdio: 'pipe' }).toString();
+        return [err_flag, res];
+    } catch (error) {
+        err_flag = true;
+        var err_out = error.stderr.toString();
+        return [err_flag, err_out];
+    }
+}
+
+function executeCommandAsync(command) {
+    //TODO:
+}
+
+
+function authorized(user) {
+    let users = textLoader.getJSON().authorizedUsers;
+    let author = "" + user.id;
+    return users.includes(author)
+}
+
+//Startup stuff
+exports.mapCommands = function () {
+    console.log("Mapping commands...");
+    commandChar = textLoader.getJSON().commandCharacter;
+    var commands = textLoader.getJSON().commands;
+    for (var index = 0; index < commands.length; ++index) {
+        var commandText = commands[index].command;
+        var commandDesc = commands[index].desc.replace("$command$", commandChar + commandText);
+        commandMap.set(commandText, { description: commandDesc, func: null });
+    }
+    commandMap.get("help").func = helpCommand;
+    commandMap.get("dice").func = diceCommand;
+    commandMap.get("commands").func = commandsCommand;
+    commandMap.get("status").func = statusCommand;
+    commandMap.get("server").func = serverCommand;
+    commandMap.get("purpose").func = purposeCommand;
+    commandMap.get("choose").func = chooseCommand;
+    commandMap.get("ping").func = pingCommand;
+    commandMap.get("registermeme").func = registerCommand;
+    commandMap.get("memecommands").func = memeCommands;
+    commandMap.get("update").func = updateCommand;
+    commandMap.get("botstatus").func = botStatusCommand;
+
+    console.log("All commands mapped.");
+}
+
+//onMessage
+exports.onMessage = function (message, client) {
+    if (!message.content.startsWith(commandChar))
+        return;
+    console.log("Commands.onMessage:" + message.content.substr(0, 255) + "...")
+    var command = commandMap.get(getCommand(message.content));
+    if (command !== undefined && typeof command.func === 'function') {
+        command.func(message, client);
+    } else {
+        customMemeCommand(message,client);
+    }
+}
+
+//mentionEvent
+exports.mentionEvent = function (message, client) {
+    if (message.isMentioned(client.users.get("603095851195432961"))) {
+        var replies = textLoader.mentionReplies();
+        message.channel.send(utils.getRandomValue(replies));
+    }
+}
+
+//custom meme command
+function customMemeCommand(message,client) {
+    
+    if(message.content.includes(commandChar)) {    
+        var command = message.content.split(' ')[0].replace(commandChar, '');
+        if (textLoader.getImgCommands().has(command)) {
+            message.channel.send(textLoader.getImgCommands().get(command));
+        }
+    }
+}
+
+//Command functions
+
+function commandsCommand(message, client) {
+    var command_list = "";
+    var commands = textLoader.getJSON().commands;
+    commandMap.forEach(function (value, key, map) {
+        command_list += commandChar + key + " ";
+    })
+    message.channel.send("Commands: \n```" + command_list + "```");
+}
+
+function helpCommand(message, client) {
+    var args = getArgs(message.content);
+    if (args[0] === undefined) {
+        message.channel.send(commandMap.get("help").description);
+    } else {
+        var command = commandMap.get(args[0]);
+        if (command !== undefined && command.description !== undefined)
+            message.channel.send(command.description);
+    }
+}
+
+function diceCommand(message, client) {
+    var args = getArgs(message.content);
     if (args[0] == undefined) {
         message.channel.send(textLoader.getJSON().descriptions[0]);
         return;
@@ -41,7 +201,6 @@ exports.diceCommand = function (message, args, client) {
     if (max <= 0) {
         message.channel.send(textLoader.getJSON().flavorText.lowDice + utils.getEmoji(client, "420"));
         return;
-
     }
     if (max > 1000000) {
         var yamero = utils.getEmoji(client, "yamero");
@@ -67,59 +226,6 @@ exports.diceCommand = function (message, args, client) {
     message.channel.send(msg);
 }
 
-
-function executeCommandSync(command) {
-    var err_flag = false;
-    try {
-        var res = exec.execSync(command, { stdio: 'pipe' }).toString();
-        return [err_flag, res];
-    } catch (error) {
-        err_flag = true;
-        var err_out = error.stderr.toString();
-        return [err_flag, err_out];
-    }
-}
-
-function getServerStatus(address) {
-    return executeCommandSync('mcstatus ' + address + ' status');
-}
-
-function getRightFromChar(string, char) {
-    if(!string.includes(char))
-        return "";
-    return string.substring(string.indexOf(char), string.length -1);
-}
-
-function getLeftFromChar(string, char) {
-    if(!string.includes(char))
-        return "";
-    return string.substring(0, string.indexOf(char));
-}
-
-function parseMcstatusOutput(output){
-    var message = "Server is online.\n";
-    var lines = output.split("\n");
-    message += lines[0]+"\n";
-
-    var desc = getRightFromChar(lines[1]," ").replace("\"", "").split(":")[1].replace(/\{|\}/,"");
-    message +=  "description: " + desc.trim()+ "\n";
-    
-    var playerInfo = getRightFromChar(lines[2]," ").replace(/\[|\]|\'/,"").trim();
-    message += "players: " + playerInfo.split(" ")[0];
-
-    if (!playerInfo.startsWith("0")) {
-        message+=" ( ";
-        var players = getRightFromChar(playerInfo," ");
-        var playersList = players.split(",");
-        players = "";
-        for(var i = 0; i < playersList.length; ++i){
-            var player = playersList[i].trim().replace("'","");
-            players+= getLeftFromChar(player," ")+" ";
-        }
-        message+= players+")";
-    }
-    return message;
-}
 function outputStatusResult(address, msg, client) {
     var result = getServerStatus(address);
     if (result[0] === true) {
@@ -134,7 +240,8 @@ function outputStatusResult(address, msg, client) {
     }
 }
 
-exports.statusCommand = function (message, args, client) {
+function statusCommand(message, client) {
+    var args = getArgs(message.content);
     if (args[0] === undefined) {
         message.channel.send(textLoader.getJSON().descriptions[1]);
         return;
@@ -144,7 +251,8 @@ exports.statusCommand = function (message, args, client) {
     outputStatusResult(server_addr, message, client);
 }
 
-exports.serverCommand = function (message, args, client) {
+function serverCommand(message, client) {
+    var args = getArgs(message.content);
     if (args[0] === undefined) {
         message.channel.send(textLoader.getJSON().flavorText.serverStatusWait);
         outputStatusResult(textLoader.getJSON().myServer, message, client);
@@ -153,16 +261,12 @@ exports.serverCommand = function (message, args, client) {
         message.channel.send(textLoader.getJSON().descriptions[3]);
 }
 
-exports.purposeCommand = function (message) {
+function purposeCommand(message, client) {
     message.channel.send(utils.getRandomValue(textLoader.getJSON().miscTextBits.purpose));
 }
 
-exports.mentionEvent = function (message, client) {
-    var replies = textLoader.mentionReplies();
-    message.channel.send(utils.getRandomValue(replies) + " " + utils.getEmoji(client, "wut".toString()));
-}
-
-exports.chooseCommand = function (message, args) {
+function chooseCommand(message, client) {
+    var args = getArgs(message.content);
     if (args[0] == undefined) {
         message.channel.send(textLoader.getJSON().descriptions[4]);
         return;
@@ -170,11 +274,8 @@ exports.chooseCommand = function (message, args) {
     message.channel.send(args[utils.getRandomInt(args.length)]);
 }
 
-function wrongCommand(message) {
-    message.channel.send(textLoader.getJSON().flavorText.wrongCommand);
-}
-
-exports.pingCommand = function (message, args) {
+function pingCommand (message, client) {
+    var args = getArgs(message.content);
     if (args[0] == undefined) {
         message.channel.send(textLoader.getJSON().descriptions[4]);
         return;
@@ -189,24 +290,11 @@ exports.pingCommand = function (message, args) {
     message.channel.send(textLoader.getJSON().flavorText.pingResponse + "```" + result[1] + "```");
 }
 
-exports.customImageCommand = function (message) {
-    var command = message.content.split(' ')[0].replace('!', '');
-    if (command == undefined) {
-        wrongCommand(message);
-    }
-    if (textLoader.getImgCommands().has(command)) {
-        message.channel.send(textLoader.getImgCommands().get(command));
-    } else {
-        wrongCommand(message);
-    }
-}
 
-function checkURL(url) {
-    return (url.match(/\.(jpeg|jpg|gif|png|mp4|webm|mkv)$/) != null && url.match(/^(http\:\/\/|https\:\/\/)/) != null);
-}
 
-exports.registerCommand = function (message, args) {
+function registerCommand(message, client) {
     var allowAll = true;
+    var args = getArgs(message.content);
     let users = textLoader.getJSON().authorizedUsers;
     let author = "" + message.author.id;
 
@@ -226,34 +314,27 @@ exports.registerCommand = function (message, args) {
     }
 }
 
-exports.imageCommands = function (message) {
+function memeCommands(message,client) {
     var list = "";
 
     var commands = textLoader.getImgCommands();
     for (const [key, value] of commands.entries()) {
-        list += "!" + key + " ";
+        list += commandChar + key + " ";
     }
-    message.channel.send("Image Commands: \n```" + list + "```");
+    message.channel.send("Image Commands(case sensitive!): \n```" + list + "```");
 }
 
-function authorized(user) {
-    let users = textLoader.getJSON().authorizedUsers;
-    let author = "" + user.id;
-    return users.includes(author)
-}
-
-exports.updatecommand = function (message) {
+function updateCommand(message,client) {
     console.log("Attempting update...");
     if (!authorized(message.author)) {
         console.log("User " + message.author.username + " not authorized.");
         return;
     }
     message.channel.send(textLoader.getJSON().flavorText.updateText);
-    
 
-    var command = textLoader.getJSON().dynamicCommands.updateCommandPart1+process.pid+textLoader.getJSON().dynamicCommands.updateCommandPart2;
+    var command = textLoader.getJSON().dynamicCommands.updateCommandPart1 + process.pid + textLoader.getJSON().dynamicCommands.updateCommandPart2;
     console.log("User " + message.author.username + " authorized. Running command \"" + command + "\"");
-    
+
     var result = executeCommandSync(command);
     message.channel.send(textLoader.getJSON().flavorText.serverStatusFailed);
     if (result[0] === true) {
@@ -263,7 +344,7 @@ exports.updatecommand = function (message) {
     }
 }
 
-exports.botStatusCommand = function (message) {
+function botStatusCommand(message,client) {
     const used = process.memoryUsage();
     let ramUsage = 0;
     let cpuUsage = utils.getCPUUSage();

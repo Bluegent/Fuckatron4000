@@ -1,4 +1,5 @@
 {
+    "commandCharacter":"!",
     "mentionReplies":[
         "I heard you were talking shit about me. I'll fuck you up.",
         "Shabat Shalom, motherfucker.",
@@ -21,19 +22,19 @@
         "`<offensive shit>`",
         "I'm not a bot, you're a bot."
     ],
-    "commands":["dice", "status", "commands", "server", "purpose","choose","ping","registerImage","imageCommands","update","botStatus"],
-    "descriptions":[
-        "Returns a random number between 0 and the number given. If a second number is given, rolls the dice that many times(max 20). Usage: `!dice <number> <rolls>`",
-        "Tells you if a minecraft server is online. Usage: `!status <server address>`",
-        "Prints a list of commands. Usage: `!commands`",
-        "Prints the status of my minecraft server. Usage `!server` or `!server help`" ,
-        "Picks one of a list of strings. Usage: `!choose <option1> <option2> <option3>...`",
-        "Pings a server and returns response time. Usage: `!ping <address>",
-        "Register an image link to be associated with a custom command. Image commands can't be overwrrite, use `!imageCommands` to see a list. Usage: `!register <command> <valid_img_url>`",
-        "Lists all image commands. Usage: `!imageCommands`",
-        "Shutdown the bot, update it with a git-pull and restart it. Usage: `!update`",
-        "Returns a short status message from the bot. Usage: "
-
+    "commands":
+        [{"command":"help","desc":"Prints info about a command. Usage: `$command$ <commandName>`"}
+        ,{"command":"dice","desc":"Returns a random number between 0 and the number given. If a second number is given, rolls the dice that many times(max 20). Usage: `$command$ <number> <rolls>`"}
+        ,{"command":"status","desc":"Tells you if a minecraft server is online. Usage: `$command$ <server address>`"}
+        ,{"command":"commands","desc": "Prints a list of commands. Usage: `$command$`"}
+        ,{"command":"server","desc":"Prints the status of my minecraft server. Usage `$command$`"}
+        ,{"command":"purpose","desc":"Prints the reason for this bot's existence. Usage: `$command$`"}
+        ,{"command":"choose","desc":"Picks one of a list of strings. Usage: `$command$ <option1> <option2> <option3>...`"}
+        ,{"command":"ping","desc":"Pings a server and returns response time. Usage: `$command$ <address>"}
+        ,{"command":"registermeme","desc": "Register an image/video link to be associated with a custom command. Meme commands can't be overwrrite. Usage: `$command$ <command> <valid_img_url>`"}
+        ,{"command":"memecommands","desc":"Lists all meme commands. Usage: `$command$"}
+        ,{"command":"update","desc":"Shutdown the bot, update it with a git-pull and restart it. Usage: `$command$`"}
+        ,{"command":"botstatus","desc":"Returns a short status message from the bot. Usage: `$command$`"}
     ],
     "miscTextBits":{
         "purpose":["https://i.imgur.com/SlnddRd.png","https://i.imgur.com/DbOCFlh.png"]
