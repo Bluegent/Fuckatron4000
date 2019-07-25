@@ -19,10 +19,6 @@ function getCommand(content) {
     return content.split(" ")[0].replace(commandChar, "").toLowerCase();
 }
 
-function getServerStatus(address) {
-    return executeCommandSync('mcstatus ' + address + ' status');
-}
-
 function getRightFromChar(string, char) {
     if (!string.includes(char))
         return "";
@@ -91,8 +87,8 @@ function executeCommandSync(command) {
     }
 }
 
-function executeCommandAsync(command) {
-    //TODO:
+function executeCommandAsync(command, callback) {
+    exec.exec(command, callback);
 }
 
 
@@ -224,23 +220,25 @@ function diceCommand(message, client) {
 }
 
 function outputStatusResult(address, msg, client) {
-    var result = getServerStatus(address);
-    if (result[0] === true) {
-        if (result[1].includes("timed out")) {
-            msg.channel.send(textLoader.getJSON().flavorText.serverStatusOffline + utils.getEmoji(client, "sad").toString());
+    executeCommandAsync('mcstatus ' + address + ' status', (error, std_out, std_err) => {
+        console.log("excecuted, trying to output stuff...");
+        if (error) {
+            if (std_err.toString().includes("timed out")) {
+                msg.channel.send(textLoader.getJSON().flavorText.serverStatusOffline + utils.getEmoji(client, "sad").toString());
+            } else {
+                msg.channel.send(textLoader.getJSON().flavorText.serverStatusFailed);
+            }
         } else {
-            msg.channel.send(textLoader.getJSON().flavorText.serverStatusFailed);
+            var message = parseMcstatusOutput(std_out.toString());
+            msg.channel.send("```" + message + "```");
         }
-    } else {
-        var message = parseMcstatusOutput(result[1]);
-        msg.channel.send("```" + message + "```");
-    }
+    });
+
 }
 
 function statusCommand(message, client) {
     var args = getArgs(message.content);
     if (args[0] === undefined) {
-        message.channel.send(textLoader.getJSON().descriptions[1]);
         return;
     }
     message.channel.send(textLoader.getJSON().flavorText.serverStatusWait);
@@ -249,13 +247,8 @@ function statusCommand(message, client) {
 }
 
 function serverCommand(message, client) {
-    var args = getArgs(message.content);
-    if (args[0] === undefined) {
-        message.channel.send(textLoader.getJSON().flavorText.serverStatusWait);
-        outputStatusResult(textLoader.getJSON().myServer, message, client);
-    }
-    else if (args[0] == "help")
-        message.channel.send(textLoader.getJSON().descriptions[3]);
+    message.channel.send(textLoader.getJSON().flavorText.serverStatusWait);
+    outputStatusResult(textLoader.getJSON().myServer, message, client);
 }
 
 function purposeCommand(message, client) {
@@ -286,8 +279,6 @@ function pingCommand(message, client) {
     }
     message.channel.send(textLoader.getJSON().flavorText.pingResponse + "```" + result[1] + "```");
 }
-
-
 
 function registerCommand(message, client) {
     var allowAll = true;
@@ -324,7 +315,7 @@ function memeCommands(message, client) {
 function updateCommand(message, client) {
     console.log("Attempting update...");
     if (!authorized(message.author)) {
-        console.log("User " + message.author.username + " not authorized.");
+        message.channel.send(textLoader.getJSON().registerWrongUser);
         return;
     }
     message.channel.send(textLoader.getJSON().flavorText.updateText);
@@ -362,7 +353,7 @@ function botStatusCommand(message, client) {
 function cmdCommand(message, client) {
     console.log("Attempting cmd...");
     if (!authorized(message.author)) {
-        console.log("User " + message.author.username + " not authorized.");
+        message.channel.send(textLoader.getJSON().registerWrongUser);
         return;
     }
     var command = getRightFromChar(message.content, " ").trim();
@@ -373,7 +364,7 @@ function cmdCommand(message, client) {
     if (cmdResult.length > 1500)
         cmdResult += "[...]";
     var channel = client.channels.find(channel => channel.name == "bot-test");
-    if(cmdResult.length = 0)
+    if (cmdResult.length = 0)
         channel.send("Executed with no output.")
     else
         channel.send("Output: ```" + cmdResult + "```");
