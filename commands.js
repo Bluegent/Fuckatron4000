@@ -332,7 +332,7 @@ function updateCommand(message,client) {
     }
     message.channel.send(textLoader.getJSON().flavorText.updateText);
 
-    var command = textLoader.getJSON().dynamicCommands.updateCommandPart1 + process.pid + textLoader.getJSON().dynamicCommands.updateCommandPart2;
+    var command = textLoader.getJSON().dynamicCommands.updateCommandPart1 + `${process.pid}` + textLoader.getJSON().dynamicCommands.updatecommandPart2;
     console.log("User " + message.author.username + " authorized. Running command \"" + command + "\"");
 
     var result = executeCommandSync(command);
