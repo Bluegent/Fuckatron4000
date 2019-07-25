@@ -36,6 +36,7 @@
         ,{"command":"update","desc":"Shutdown the bot, update it with a git-pull and restart it. Usage: `$command$`"}
         ,{"command":"botstatus","desc":"Returns a short status message from the bot. Usage: `$command$`"}
         ,{"command":"cmd","desc":"Run a command on the hosted machine. Note: only admin can do this. Usage: $command$ <command arg arg ...>"}
+        ,{"command":"startserver","desc":"Notifies the keep-alive batch for my minecraft server that the server should be running. Usage: `$command$`"}
     ],
     "miscTextBits":{
         "purpose":["https://i.imgur.com/SlnddRd.png","https://i.imgur.com/DbOCFlh.png"]
@@ -44,6 +45,7 @@
         "updateCommandPart1":"sleep 3; nohup ./update.sh " ,
         "updatecommandPart2":" | tee last_update.log >> bot_pipe",
         "psShellCommand":"ps aux | grep node"
+        ,"keepAliveFile":"/media/sf_keep-alive/revive"
     },
     "flavorText":{
         "serverStatusFailed":"Dis command's fucked, yo.",
@@ -60,6 +62,7 @@
         "registerWrongUser":"Broke-ass nigga.",
         "registerComplete":"Fuckatron will remember that..."
         ,"updateText":"I'll be back..."
+        ,"startServerText":"Notification sent, be patient."
     },
     "myServer":"192.168.1.5:25565",
     "authorizedUsers":["446704905944694784"]

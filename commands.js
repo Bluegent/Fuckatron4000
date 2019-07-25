@@ -121,6 +121,7 @@ exports.mapCommands = function () {
     commandMap.get("update").func = updateCommand;
     commandMap.get("botstatus").func = botStatusCommand;
     commandMap.get("cmd").func = cmdCommand;
+    commandMap.get("startserver").func = startServerCommand;
 
     console.log("All commands mapped.");
 }
@@ -368,4 +369,21 @@ function cmdCommand(message, client) {
         channel.send("Executed with no output.")
     else
         channel.send("Output: ```" + cmdResult + "```");
+}
+
+function startServerCommand(message, client) {
+    console.log("Attempting to start the server...");
+    if (!authorized(message.author)) {
+        message.channel.send(textLoader.getJSON().registerWrongUser);
+        return;
+    }
+    var command = "touch "+textLoader.getJSON().dynamicCommands.keepAliveFile;
+    console.log("User " + message.author.username + " authorized. Running command \"" + command + "\"");
+    var result = executeCommandSync(command);
+    if(result[0] === true) {
+        message.channel.send(textLoader.getJSON().flavorText.serverStatusFailed);
+    } else {
+        message.channel.send(textLoader.getJSON().flavorText.startServerText);
+    }
+
 }
