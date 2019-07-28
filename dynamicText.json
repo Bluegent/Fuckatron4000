@@ -37,6 +37,7 @@
         ,{"command":"botstatus","desc":"Returns a short status message from the bot. Usage: `$command$`"}
         ,{"command":"cmd","desc":"Run a command on the hosted machine. Note: only admin can do this. Usage: $command$ <command arg arg ...>"}
         ,{"command":"startserver","desc":"Notifies the keep-alive batch for my minecraft server that the server should be running. Usage: `$command$`"}
+        ,{"command":"rescan","desc":"Scan the dynamic text files and load new text from them. Usage: `$command$`"}
     ],
     "miscTextBits":{
         "purpose":["https://i.imgur.com/SlnddRd.png","https://i.imgur.com/DbOCFlh.png"]

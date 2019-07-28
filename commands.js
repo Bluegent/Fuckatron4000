@@ -122,6 +122,7 @@ exports.mapCommands = function () {
     commandMap.get("botstatus").func = botStatusCommand;
     commandMap.get("cmd").func = cmdCommand;
     commandMap.get("startserver").func = startServerCommand;
+    commandMap.get("rescan").func = rescanCommand;
 
     console.log("All commands mapped.");
 }
@@ -386,4 +387,11 @@ function startServerCommand(message, client) {
         message.channel.send(textLoader.getJSON().flavorText.startServerText);
     }
 
+}
+
+function rescanCommand(message,client) {
+    if (!authorized(message.author)) {
+        message.channel.send(textLoader.getJSON().registerWrongUser);
+        re
+    textLoader.rescan();
 }

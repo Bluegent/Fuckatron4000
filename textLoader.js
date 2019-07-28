@@ -84,3 +84,4 @@ function parseText() {
 }
 
 
+exports.rescan = parseText;
