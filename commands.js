@@ -99,15 +99,17 @@ function authorized(user) {
 }
 
 //Startup stuff
-exports.mapCommands = function () {
+exports.mapCommands = mapFunctions;
+
+function mapFunctions(){
     console.log("Mapping commands...");
-    commandChar = textLoader.getJSON().commandCharacter;
     var commands = textLoader.getJSON().commands;
     for (var index = 0; index < commands.length; ++index) {
         var commandText = commands[index].command;
         var commandDesc = commands[index].desc.replace("$command$", commandChar + commandText);
-        commandMap.set(commandText, { description: commandDesc, func: null });
+        commandMap.set(commandText, { description: null, func: null });
     }
+    loadCommandDescriptions();
     commandMap.get("help").func = helpCommand;
     commandMap.get("dice").func = diceCommand;
     commandMap.get("commands").func = commandsCommand;
@@ -123,8 +125,18 @@ exports.mapCommands = function () {
     commandMap.get("cmd").func = cmdCommand;
     commandMap.get("startserver").func = startServerCommand;
     commandMap.get("rescan").func = rescanCommand;
-
     console.log("All commands mapped.");
+}
+
+
+function loadCommandDescriptions() {
+    commandChar = textLoader.getJSON().commandCharacter;
+    var commands = textLoader.getJSON().commands;
+    for (var index = 0; index < commands.length; ++index) {
+        var commandText = commands[index].command;
+        var commandDesc = commands[index].desc.replace("$command$", commandChar + commandText);
+        commandMap.get(commandText).description = commandDesc;
+    }
 }
 
 //onMessage
@@ -395,4 +407,5 @@ function rescanCommand(message,client) {
         return;
     }
     textLoader.rescan();
+    loadCommandDescriptions();
 }
