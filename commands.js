@@ -392,6 +392,7 @@ function startServerCommand(message, client) {
 function rescanCommand(message,client) {
     if (!authorized(message.author)) {
         message.channel.send(textLoader.getJSON().registerWrongUser);
-        re
+        return;
+    }
     textLoader.rescan();
 }
