@@ -4,13 +4,14 @@ var Discord = require('discord.js');
 var textLoader = require('./textLoader.js');
 var utils = require('./utils.js');
 var Insults = require('./cleverbot.js');
-
+var insult = require('./insults.js');
 // Initialize Discord Bot
 var bot = new Discord.Client();
 bot.login(auth.token);
 
 bot.on("ready", () => {
     console.log("Starting...");
+    insult.initTemplates();
     textLoader.start();
     textLoader.loadImageCommands();
     console.log("JSON setup complete.");
