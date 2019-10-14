@@ -7,17 +7,20 @@ var nounT = "@noun";
 var locationT = "@location";
 var tagT= ">>tag";
 var adjectiveT = "@adjective";
+var associateT = "@assoc";
 
 
 var nounArr = ["fart","cum","shit","dick","anus"];
-var verbArr = ["smell","drink","slurp","gargle","love","sniff","suck"];
+var verbArr = ["smell","drink","slurp","gargle","love","sniff","suck","steal"];
 var locationArr = ["in hell","in their mother's basement","in a "+ adjectiveT+" bar","behind the Kaufland store","in their boss' office"];
-var adjectiveArr = ["crusty"];
+var associateArr = ["goblin","associate","enthusiast","thief","bastard"];
+var adjectiveArr = ["crusty","smelly","nasty","decrepit","ancient","old","deadly","dank"];
 var insultTemplates = [];
 
 exports.initTemplates = function(){
     insultTemplates.push(tagT+" is a "+nounT+" "+gerundT+"-"+nounT+" "+doerT+".");
     insultTemplates.push(tagT+" "+verbT+"s " +nounT+" "+ locationT+".");
+    insultTemplates.push(tagT+" is a "+adjectiveT+" "+nounT+" "+associateT+".");
 }
 
 function ran(max) {
@@ -61,6 +64,9 @@ function getRandomLocation(){
 function getRandomAdjective(){
     return ranS(adjectiveArr);
 }
+function getRandomAssociate(){
+    return ranS(associateArr);
+}
 
 function replaceTags(string){
     var copy = string.replace(verbT,getRandomVerb());
@@ -69,6 +75,7 @@ function replaceTags(string){
     copy = copy.replace(adjectiveT,getRandomAdjective());
     copy = copy.replace(doerT,getRandomDoer());
     copy = copy.replace(gerundT,getRandomGerund());
+    copy = copy.replace(associateT,getRandomAssociate());
     return copy
 }
 
