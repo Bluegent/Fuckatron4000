@@ -3,6 +3,7 @@ var auth = require('./auth.json');
 var Discord = require('discord.js');
 var textLoader = require('./textLoader.js');
 var utils = require('./utils.js');
+var Insults = require('./cleverbot.js');
 
 // Initialize Discord Bot
 var bot = new Discord.Client();
@@ -25,5 +26,5 @@ bot.on("ready", () => {
 
 bot.on("message", (message) => {
     Commands.onMessage(message,bot);
-    Commands.mentionEvent(message, bot);
+    Insults.mentionEvent(message, bot);
 });

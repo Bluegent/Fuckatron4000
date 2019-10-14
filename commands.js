@@ -152,13 +152,6 @@ exports.onMessage = function (message, client) {
     }
 }
 
-//mentionEvent
-exports.mentionEvent = function (message, client) {
-    if (message.isMentioned(client.users.get("603095851195432961"))) {
-        var replies = textLoader.mentionReplies();
-        message.channel.send(utils.getRandomValue(replies));
-    }
-}
 
 //custom meme command
 function customMemeCommand(message, client) {

@@ -6,6 +6,7 @@
   "dependencies": {
     "discord.io": "^2.5.3",
     "discord.js": "^11.5.1",
+    "https": "^1.0.0",
     "node-os-utils": "^1.0.7",
     "winston": "^3.2.1"
   },
